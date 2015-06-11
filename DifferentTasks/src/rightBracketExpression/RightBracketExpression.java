@@ -3,22 +3,57 @@ package rightBracketExpression;
 import java.io.BufferedReader;
 import java.io.IOException;
 import java.io.InputStreamReader;
-import java.util.HashMap;
-import java.util.Map;
+import java.util.HashSet;
+import java.util.Set;
 
 // task description in the text file "Task.txt"
 
 public class RightBracketExpression {
-	private static int N;
-	 //private static char[] bracketExpression = {'(','(',')',')'};
-	private static Map<String,String> variantsOfBracketExpression = new HashMap<String,String>();
+	private static Set<String> variantsOfBracketExpression = new HashSet<String>();
 	
-	public static void initializeHashMap(){
-		variantsOfBracketExpression.put("1","()");
-		variantsOfBracketExpression.put("2","()()"); 
-		variantsOfBracketExpression.put("2","(())");
+	public static Set<String> generateBasicVariants(int N){
+		StringBuffer sb = new StringBuffer();
+		
+		Set<String> prevVariants = new HashSet<String>();
+		Set<String> nextVariants = new HashSet<String>();
+		
+		prevVariants.add("()");
+		for(int i=1;i<N-1;i++){
+			for(String tempVariant:prevVariants){
+				for(int j=0;j<2*i;j++){
+					sb.append(tempVariant);
+					nextVariants.add(sb.insert(j, "()").toString());
+					sb.delete(0, sb.length());
+					//System.out.println(nextVariants);
+				}
+			}
+			prevVariants = nextVariants;
+			nextVariants = new HashSet<String>();
+		}
+		return prevVariants;
 	}
-	public static void getValueOfNFromUser(){
+	public static void getVariantsOfBracketsForN(int N){
+		if(N==1){
+			variantsOfBracketExpression.add("()");
+			//System.out.println(variantsOfBracketExpression);
+			return;
+		}
+		StringBuffer sb = new StringBuffer();
+		Set<String> prevVariants = generateBasicVariants(N);
+			for(String tempVariant:prevVariants){
+				for(int j=0;j<2*(N-1);j++){
+					sb.append(tempVariant);
+					variantsOfBracketExpression.add(sb.insert(j, "()").toString());
+					sb.delete(0, sb.length());
+				}
+			}
+			//System.out.println(variantsOfBracketExpression);
+	}
+	public static int getCountOfVariantsOfBracketExpression(int N){
+		getVariantsOfBracketsForN(N);
+		return variantsOfBracketExpression.size();
+	}
+	public static int getValueOfNFromUser(){
 		BufferedReader br = new BufferedReader(new InputStreamReader(System.in));
 		String input = null;
 	    System.out.println("Enter N for right bracket expression: "); 
@@ -27,7 +62,7 @@ public class RightBracketExpression {
 		} catch (IOException e) {
 			e.printStackTrace();
 		}
-	    N = Integer.parseInt(input);
+	    return Integer.parseInt(input);
 	}
 	public static char[] toCharArray(String inputExpression){
 		char[] resultExpression = new char[inputExpression.length()];
@@ -48,9 +83,8 @@ public class RightBracketExpression {
 		return false;
 	}
 	public static void main(String[] args) {
-		String expression = "(()(()))";
-		boolean temp = isCorrectBracketExpression(toCharArray(expression));
-		System.out.println(temp);
+		//String expression = "(()(()))";
+		int count =getCountOfVariantsOfBracketExpression(0);
+		System.out.println(count);
 	}
-
 }
