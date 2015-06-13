@@ -18,7 +18,7 @@ public class RightBracketExpression {
 		Set<String> nextVariants = new HashSet<String>();
 		
 		prevVariants.add("()");
-		for(int i=1;i<N-1;i++){
+		for(int i=1;i<N;i++){
 			for(String tempVariant:prevVariants){
 				for(int j=0;j<2*i;j++){
 					sb.append(tempVariant);
@@ -33,21 +33,13 @@ public class RightBracketExpression {
 		return prevVariants;
 	}
 	public static void getVariantsOfBracketsForN(int N){
+		if(N==0) return;
 		if(N==1){
 			variantsOfBracketExpression.add("()");
 			//System.out.println(variantsOfBracketExpression);
 			return;
 		}
-		StringBuffer sb = new StringBuffer();
-		Set<String> prevVariants = generateBasicVariants(N);
-			for(String tempVariant:prevVariants){
-				for(int j=0;j<2*(N-1);j++){
-					sb.append(tempVariant);
-					variantsOfBracketExpression.add(sb.insert(j, "()").toString());
-					sb.delete(0, sb.length());
-				}
-			}
-			//System.out.println(variantsOfBracketExpression);
+		variantsOfBracketExpression = generateBasicVariants(N);
 	}
 	public static int getCountOfVariantsOfBracketExpression(int N){
 		getVariantsOfBracketsForN(N);
@@ -84,7 +76,7 @@ public class RightBracketExpression {
 	}
 	public static void main(String[] args) {
 		//String expression = "(()(()))";
-		int count =getCountOfVariantsOfBracketExpression(0);
+		int count =getCountOfVariantsOfBracketExpression(12);
 		System.out.println(count);
 	}
 }
